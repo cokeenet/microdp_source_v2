@@ -466,9 +466,12 @@ void btn_event()
     const char *s9_ch =
     "0 度-正常\n"
     "180 度";
+    const char *tzl =
+    "UTC+\n"
+    "UTC-";
     if(lang=="en_us")current_selection = u8g2.userInterfaceSelectionList("Main Menu",current_selection,string_list);
     else if(lang=="zh_cn")current_selection = u8g2.userInterfaceSelectionList("主菜单",current_selection,string_list_chn);
-    if (current_selection == 0)u8g2.userInterfaceMessage("Nothing selected.","",""," ok ");
+    if (current_selection == 0)u8g2.userInterfaceMessage("Nothing selected. >_<","",""," ok ");
     else
     {
         switch (current_selection)
@@ -489,10 +492,33 @@ void btn_event()
             WiFi.disconnect();
             break;
         case 7:
-        uint8_t tz;
-           if(lang=="en_us") u8g2.userInterfaceInputValue("Timezone(UTC offset)","UTC ",&tz,0,12,2," hours");
-           else if(lang=="zh_cn")u8g2.userInterfaceInputValue("时区(世界协调时差)","UTC ",&tz,0,12,2," 小时");
-            timeZone=tz;
+        uint8_t tz;   
+        current_selection = u8g2.userInterfaceSelectionList("选择/Choose",current_selection,tzl);
+        if(current_selection==1)
+        {
+            if(lang=="en_us")
+           {
+              u8g2.userInterfaceInputValue("Timezone|UTC+","UTC+",&tz,0,12,2," hours");
+           } 
+           else if(lang=="zh_cn")
+           {
+            u8g2.userInterfaceInputValue("时区(世界协调时差)","UTC+",&tz,0,12,2," 小时");
+           }
+           timeZone=tz;
+        }
+        else if(current_selection==2)
+        {
+            if(lang=="en_us")
+           {
+              u8g2.userInterfaceInputValue("Timezone|UTC-","UTC-",&tz,0,12,2," hours");
+           } 
+           else if(lang=="zh_cn")
+           {
+            u8g2.userInterfaceInputValue("时区(世界协调时差)","UTC-",&tz,0,12,2," 小时");
+           }
+           timeZone=0-tz;
+        }
+              
             break;
         case 8:
             if(lang=="en_us")c1 = u8g2.userInterfaceSelectionList("Rotation", c1, s9);
